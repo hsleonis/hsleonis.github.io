@@ -121,12 +121,13 @@ class HackerPortfolio {
                 } else {
                     this.filteredProjects = this.projects.filter(project => {
                         const lang = project.language?.toLowerCase() || '';
+                        const projTopics = project.topics?.toLowerCase() || '';
                         switch (this.currentFilter) {
                             case 'javascript': return lang.includes('javascript') || lang.includes('typescript');
                             case 'python': return lang.includes('python');
-                            case 'html': return lang.includes('html') || lang.includes('css');
-                            case 'cpp': return lang.includes('c++') || lang.includes('c');
-                            case 'other': return !['javascript', 'typescript', 'python', 'html', 'css', 'c++', 'c'].some(l => lang.includes(l));
+                            case 'php': return lang.includes('html') || lang.includes('php');
+                            case 'machine-learning': return lang.includes('Jupyter Notebook') || projTopics.includes('machine-learning');
+                            case 'other': return !['javascript', 'typescript', 'python', 'html', 'php', 'Jupyter Notebook'].some(l => lang.includes(l));
                             default: return true;
                         }
                     });
