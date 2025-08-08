@@ -121,7 +121,7 @@ class HackerPortfolio {
                 } else {
                     this.filteredProjects = this.projects.filter(project => {
                         const lang = project.language?.toLowerCase() || '';
-                        const projTopics = project.topics?.toLowerCase() || '';
+                        const projTopics = project.topics || [];
                         switch (this.currentFilter) {
                             case 'javascript': return lang.includes('javascript') || lang.includes('typescript');
                             case 'python': return lang.includes('python');
