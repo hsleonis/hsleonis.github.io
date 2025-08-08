@@ -1,7 +1,7 @@
 class HackerPortfolio {
             constructor() {
                 // Set your GitHub username here
-                this.githubUsername = 'hsleonis'; // Change this to your actual username
+                this.githubUsername = 'your-github-username'; // Change this to your actual username
                 
                 this.projects = [];
                 this.filteredProjects = [];
@@ -172,16 +172,21 @@ class HackerPortfolio {
                 const project = this.selectedProject;
 
                 if (!project) {
-                    container.innerHTML = '<h3>PROJECT DETAILS</h3><div class="status">Select a project to view details</div>';
+                    container.innerHTML = `
+                        <h3>PROJECT ANALYSIS</h3>
+                        <div class="status">Select a project to view details</div>
+                    `;
                     return;
                 }
 
                 container.innerHTML = `
-                    <h3>PROJECT ANALYSIS</h3>
-                    <div class="detail-item">
-                        <span class="label">NAME:</span>
-                        <span class="value">${project.name}</span>
+                    <h3>PROJECT ANALYSIS: ${project.name}</h3>
+                    
+                    <div class="description-area">
+                        <strong>DESCRIPTION:</strong><br><br>
+                        ${project.description || 'No description available'}
                     </div>
+                    
                     <div class="detail-item">
                         <span class="label">LANGUAGE:</span>
                         <span class="value">${project.language}</span>
@@ -197,19 +202,25 @@ class HackerPortfolio {
                     </div>
                     ` : ''}
                     <div class="detail-item">
-                        <span class="label">UPDATED:</span>
+                        <span class="label">LAST UPDATED:</span>
                         <span class="value">${project.updated ? project.updated.toLocaleDateString() : 'N/A'}</span>
                     </div>
                     ${project.size !== undefined ? `
                     <div class="detail-item">
-                        <span class="label">SIZE:</span>
+                        <span class="label">REPOSITORY SIZE:</span>
                         <span class="value">${project.size} KB</span>
                     </div>
                     ` : ''}
+                    ${project.topics && project.topics.length > 0 ? `
+                    <div class="detail-item">
+                        <span class="label">TOPICS:</span>
+                        <span class="value">${project.topics.join(', ')}</span>
+                    </div>
+                    ` : ''}
                     <div class="links">
-                        ${project.url ? `<a href="${project.url}" target="_blank">VIEW SOURCE</a>` : ''}
+                        ${project.url ? `<a href="${project.url}" target="_blank">VIEW SOURCE CODE</a>` : ''}
                         ${project.homepage ? `<a href="${project.homepage}" target="_blank">LIVE DEMO</a>` : ''}
-                        ${project.clone_url ? `<a href="${project.clone_url}" target="_blank">CLONE</a>` : ''}
+                        ${project.clone_url ? `<a href="${project.clone_url}" target="_blank">CLONE REPOSITORY</a>` : ''}
                     </div>
                 `;
             }
