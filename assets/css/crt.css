@@ -1,0 +1,25 @@
+body {
+  background: #010301 !important;
+  color: #33ff33;
+  font-family: 'Courier New', monospace;
+}
+
+.terminal-container {
+  height: 90vh;
+  width: 95%;
+  margin: 2vh auto;
+  border: 2px solid #33ff33;
+  background: rgba(0, 10, 0, 0.85);
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+  position: relative;
+}
+
+/* CRT scanlines */
+.terminal-container::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(0,255,0,0.05) 50%, transparent 50%);
+  background-size: 100% 2px;
+  pointer-events: none;
+}
