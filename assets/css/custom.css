@@ -353,6 +353,10 @@
                 font-size: 0.8em;
                 margin-top: 5px;
             }
+
+            .project-details {
+                padding: 0;
+            }
                 
             .filter-section {
         	margin-bottom: 10px;
