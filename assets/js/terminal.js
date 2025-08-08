@@ -24,7 +24,7 @@ const commands = {
   },
   repos: () => {
     term.writeln("Fetching repositories...\n");
-    fetch("https://api.github.com/users/YOUR_GITHUB_USERNAME/repos")
+    fetch("https://api.github.com/users/hsleonis/repos")
       .then(res => res.json())
       .then(data => {
         data.forEach(repo => {
