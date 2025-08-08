@@ -126,8 +126,8 @@ class HackerPortfolio {
                             case 'javascript': return lang.includes('javascript') || lang.includes('typescript');
                             case 'python': return lang.includes('python');
                             case 'php': return lang.includes('html') || lang.includes('php');
-                            case 'machine-learning': return lang.includes('Jupyter Notebook') || projTopics.includes('machine-learning');
-                            case 'other': return !['javascript', 'typescript', 'python', 'html', 'php', 'Jupyter Notebook'].some(l => lang.includes(l));
+                            case 'machine-learning': return lang.includes('jupyter notebook') || projTopics.includes('machine-learning');
+                            case 'other': return !['javascript', 'typescript', 'python', 'html', 'php', 'jupyter notebook'].some(l => lang.includes(l));
                             default: return true;
                         }
                     });
