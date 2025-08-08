@@ -1,105 +1,229 @@
-const term = new Terminal({
-  cols: 80,
-  rows: 24,
-  cursorBlink: true,
-  theme: { background: '#010301', foreground: '#33ff33' }
-});
+class HackerPortfolio {
+            constructor() {
+                // Set your GitHub username here
+                this.githubUsername = 'hsleonis'; // Change this to your actual username
+                
+                this.projects = [];
+                this.filteredProjects = [];
+                this.selectedProject = null;
+                this.currentFilter = 'all';
+                
+                this.init();
+            }
 
-term.open(document.getElementById('terminal'));
+            init() {
+                this.updateTimestamp();
+                setInterval(() => this.updateTimestamp(), 1000);
+                
+                this.setupEventListeners();
+                this.detectGitHubUsername();
+                this.loadProjects();
+            }
 
-let bootMessages = [
-  "[BOOT] Initializing hardware...",
-  "[OK] CPU: Neural Processing Unit Online",
-  "[OK] Memory Check: 8192 MB",
-  "[OK] Loading Retro Kernel v3.1.4",
-  "[OK] Network Interface Activated",
-  "[OK] Connecting to GitHub...",
-  "[OK] Loading portfolio modules",
-  "System Ready. Type 'help' for commands."
-];
+            updateTimestamp() {
+                const now = new Date();
+                const timestamp = now.toISOString().replace('T', ' ').substr(0, 19);
+                document.getElementById('timestamp').textContent = `SYSTEM TIME: ${timestamp}`;
+            }
 
-let commands = {
-  help: () => {
-    term.writeln("Available commands:");
-    term.writeln("repos - list my GitHub repositories");
-    term.writeln("about - about me");
-    term.writeln("clear - clear the terminal");
-  },
-  about: () => {
-    term.writeln("I am a software engineer & data scientist, building cool stuff.");
-  },
-  clear: () => {
-    term.clear();
-  },
-  repos: () => {
-    term.writeln("Fetching repositories...\n");
-    fetch("https://api.github.com/users/hsleonis/repos")
-      .then(res => res.json())
-      .then(data => {
-        if (!Array.isArray(data)) {
-          term.writeln("Unexpected API response.");
-          return;
+            detectGitHubUsername() {
+                // Try to detect GitHub username from URL
+                const hostname = window.location.hostname;
+                if (hostname.includes('.github.io')) {
+                    this.githubUsername = hostname.split('.')[0];
+                }
+            }
+
+            setupEventListeners() {
+                // Filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentFilter = e.target.dataset.filter;
+                        this.filterProjects();
+                    });
+                });
+            }
+
+            async loadProjects() {
+                this.showLoading();
+                
+                try {
+                    // Load from GitHub API
+                    await this.loadFromGitHub();
+                    
+                    // Try to load and concat from projects.json if available
+                    try {
+                        await this.loadFromJSON();
+                    } catch (jsonError) {
+                        // JSON file is optional, so we don't show error if it fails
+                        console.log('No projects.json file found or error loading it:', jsonError.message);
+                    }
+                    
+                    this.filterProjects();
+                } catch (error) {
+                    this.showError(`CONNECTION ERROR: ${error.message}`);
+                }
+            }
+
+            async loadFromGitHub() {
+                if (!this.githubUsername || this.githubUsername === 'your-github-username') {
+                    throw new Error('Please set your GitHub username in the script');
+                }
+
+                const response = await fetch(`https://api.github.com/users/${this.githubUsername}/repos?sort=updated&per_page=100`);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status}`);
+                }
+
+                const repos = await response.json();
+                this.projects = repos.map(repo => ({
+                    name: repo.name,
+                    description: repo.description || 'No description available',
+                    language: repo.language || 'Unknown',
+                    stars: repo.stargazers_count,
+                    forks: repo.forks_count,
+                    updated: new Date(repo.updated_at),
+                    url: repo.html_url,
+                    clone_url: repo.clone_url,
+                    homepage: repo.homepage,
+                    topics: repo.topics || [],
+                    size: repo.size,
+                    created: new Date(repo.created_at),
+                    source: 'github'
+                }));
+            }
+
+            async loadFromJSON() {
+                const response = await fetch('projects.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Could not load projects.json`);
+                }
+
+                const data = await response.json();
+                const jsonProjects = (data.projects || []).map(project => ({
+                    ...project,
+                    updated: project.updated ? new Date(project.updated) : new Date(),
+                    created: project.created ? new Date(project.created) : new Date(),
+                    source: 'json'
+                }));
+                
+                // Concat JSON projects to existing GitHub projects
+                this.projects = [...this.projects, ...jsonProjects];
+            }
+
+            filterProjects() {
+                if (this.currentFilter === 'all') {
+                    this.filteredProjects = [...this.projects];
+                } else {
+                    this.filteredProjects = this.projects.filter(project => {
+                        const lang = project.language?.toLowerCase() || '';
+                        switch (this.currentFilter) {
+                            case 'javascript': return lang.includes('javascript') || lang.includes('typescript');
+                            case 'python': return lang.includes('python');
+                            case 'html': return lang.includes('html') || lang.includes('css');
+                            case 'cpp': return lang.includes('c++') || lang.includes('c');
+                            case 'other': return !['javascript', 'typescript', 'python', 'html', 'css', 'c++', 'c'].some(l => lang.includes(l));
+                            default: return true;
+                        }
+                    });
+                }
+                this.renderProjects();
+            }
+
+            renderProjects() {
+                const container = document.getElementById('projectList');
+                
+                if (this.filteredProjects.length === 0) {
+                    container.innerHTML = '<div class="status">NO PROJECTS FOUND IN DATABASE</div>';
+                    return;
+                }
+
+                container.innerHTML = this.filteredProjects.map((project, index) => `
+                    <div class="project-item" data-index="${index}">
+                        <h4>${project.name}</h4>
+                        <div class="language">${project.language}</div>
+                        <div class="description">${project.description}</div>
+                    </div>
+                `).join('');
+
+                // Add click listeners
+                container.querySelectorAll('.project-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.dataset.index);
+                        this.selectProject(index);
+                    });
+                });
+            }
+
+            selectProject(index) {
+                document.querySelectorAll('.project-item').forEach(item => item.classList.remove('selected'));
+                document.querySelectorAll('.project-item')[index]?.classList.add('selected');
+                
+                this.selectedProject = this.filteredProjects[index];
+                this.renderProjectDetails();
+            }
+
+            renderProjectDetails() {
+                const container = document.getElementById('projectDetails');
+                const project = this.selectedProject;
+
+                if (!project) {
+                    container.innerHTML = '<h3>PROJECT DETAILS</h3><div class="status">Select a project to view details</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <h3>PROJECT ANALYSIS</h3>
+                    <div class="detail-item">
+                        <span class="label">NAME:</span>
+                        <span class="value">${project.name}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">LANGUAGE:</span>
+                        <span class="value">${project.language}</span>
+                    </div>
+                    ${project.stars !== undefined ? `
+                    <div class="detail-item">
+                        <span class="label">STARS:</span>
+                        <span class="value">${project.stars}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">FORKS:</span>
+                        <span class="value">${project.forks}</span>
+                    </div>
+                    ` : ''}
+                    <div class="detail-item">
+                        <span class="label">UPDATED:</span>
+                        <span class="value">${project.updated ? project.updated.toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                    ${project.size !== undefined ? `
+                    <div class="detail-item">
+                        <span class="label">SIZE:</span>
+                        <span class="value">${project.size} KB</span>
+                    </div>
+                    ` : ''}
+                    <div class="links">
+                        ${project.url ? `<a href="${project.url}" target="_blank">VIEW SOURCE</a>` : ''}
+                        ${project.homepage ? `<a href="${project.homepage}" target="_blank">LIVE DEMO</a>` : ''}
+                        ${project.clone_url ? `<a href="${project.clone_url}" target="_blank">CLONE</a>` : ''}
+                    </div>
+                `;
+            }
+
+            showLoading() {
+                document.getElementById('projectList').innerHTML = 
+                    '<div class="status loading">ACCESSING SECURE DATABASE...<br>DECRYPTING PROJECT FILES...</div>';
+            }
+
+            showError(message) {
+                document.getElementById('projectList').innerHTML = 
+                    `<div class="status error">SYSTEM ERROR:<br>${message}</div>`;
+            }
         }
-        data.forEach(repo => {
-          term.writeln(`${repo.name} - ${repo.html_url}`);
-        });
-      })
-      .catch(err => term.writeln("Error fetching repos: " + err));
-  }
-};
 
-let buffer = "";
-let inputEnabled = false;
-
-function enableInput() {
-  inputEnabled = true;
-  term.write("\r\n$ ");
-}
-
-term.onKey(e => {
-  if (!inputEnabled) return;
-
-  const char = e.key;
-  const keyCode = e.domEvent.keyCode;
-
-  if (keyCode === 13) { // Enter
-    const cmd = buffer.trim();
-    term.writeln("");
-    if (commands[cmd]) commands[cmd]();
-    else term.writeln(`Command not found: ${cmd}`);
-    buffer = "";
-    term.write("\r\n$ ");
-  } else if (keyCode === 8) { // Backspace
-    if (buffer.length > 0) {
-      term.write("\b \b");
-      buffer = buffer.slice(0, -1);
-    }
-  } else {
-    buffer += char;
-    term.write(char);
-  }
-});
-
-// Typing effect helper: types a single line char-by-char
-function typeLine(line, index = 0, callback) {
-  if (index < line.length) {
-    term.write(line[index]);
-    setTimeout(() => typeLine(line, index + 1, callback), 40); // 40ms per char
-  } else {
-    term.writeln("");
-    if (callback) callback();
-  }
-}
-
-// Boot animation with typing effect on each line
-function bootSequence(index = 0) {
-  if (index < bootMessages.length) {
-    typeLine(bootMessages[index], 0, () => {
-      setTimeout(() => bootSequence(index + 1), 300);
-    });
-  } else {
-    enableInput();
-  }
-}
-
-bootSequence();
+        // Initialize the portfolio
+        new HackerPortfolio();
