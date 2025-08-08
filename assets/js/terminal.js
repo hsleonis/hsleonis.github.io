@@ -1,7 +1,7 @@
 class HackerPortfolio {
             constructor() {
                 // Set your GitHub username here
-                this.githubUsername = 'your-github-username'; // Change this to your actual username
+                this.githubUsername = 'hsleonis'; // Change this to your actual username
                 
                 this.projects = [];
                 this.filteredProjects = [];
