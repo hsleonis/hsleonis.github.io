@@ -79,7 +79,7 @@ class HackerPortfolio {
                 }
 
                 const repos = await response.json();
-                this.projects = repos.map(repo => ({
+                this.projects = reposrepos.filter(repo => repo.name !== this.githubUsername + '.github.io').map(repo => ({
                     name: repo.name,
                     description: repo.description || 'No description available',
                     language: repo.language || 'Unknown',
