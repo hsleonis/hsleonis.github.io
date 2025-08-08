@@ -329,15 +329,17 @@
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr;
+                grid-template-rows: 200px 1fr;
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 1.5em;
+                text-shadow: 0 0 1px #00ff41;
+                margin-bottom: 5px;
             }
             
             .header .system-info {
                 flex-direction: column;
-                gap: 5px;
+                gap: 1px;
             }
         }
