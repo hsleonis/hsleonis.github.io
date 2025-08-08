@@ -6,10 +6,19 @@ const term = new Terminal({
 });
 
 term.open(document.getElementById('terminal'));
-term.writeln("Initializing Hacker Portfolio...");
-term.writeln("Type 'help' to see commands.\n");
 
-const commands = {
+let bootMessages = [
+  "[BOOT] Initializing hardware...",
+  "[OK] CPU: Neural Processing Unit Online",
+  "[OK] Memory Check: 8192 MB",
+  "[OK] Loading Retro Kernel v3.1.4",
+  "[OK] Network Interface Activated",
+  "[OK] Connecting to GitHub...",
+  "[OK] Loading portfolio modules",
+  "System Ready. Type 'help' for commands."
+];
+
+let commands = {
   help: () => {
     term.writeln("Available commands:");
     term.writeln("repos - list my GitHub repositories");
@@ -27,6 +36,10 @@ const commands = {
     fetch("https://api.github.com/users/hsleonis/repos")
       .then(res => res.json())
       .then(data => {
+        if (!Array.isArray(data)) {
+          term.writeln("Unexpected API response.");
+          return;
+        }
         data.forEach(repo => {
           term.writeln(`${repo.name} - ${repo.html_url}`);
         });
@@ -36,7 +49,16 @@ const commands = {
 };
 
 let buffer = "";
+let inputEnabled = false;
+
+function enableInput() {
+  inputEnabled = true;
+  term.write("\r\n$ ");
+}
+
 term.onKey(e => {
+  if (!inputEnabled) return;
+
   const char = e.key;
   const keyCode = e.domEvent.keyCode;
 
@@ -46,6 +68,7 @@ term.onKey(e => {
     if (commands[cmd]) commands[cmd]();
     else term.writeln(`Command not found: ${cmd}`);
     buffer = "";
+    term.write("\r\n$ ");
   } else if (keyCode === 8) { // Backspace
     if (buffer.length > 0) {
       term.write("\b \b");
@@ -56,3 +79,27 @@ term.onKey(e => {
     term.write(char);
   }
 });
+
+// Typing effect helper: types a single line char-by-char
+function typeLine(line, index = 0, callback) {
+  if (index < line.length) {
+    term.write(line[index]);
+    setTimeout(() => typeLine(line, index + 1, callback), 40); // 40ms per char
+  } else {
+    term.writeln("");
+    if (callback) callback();
+  }
+}
+
+// Boot animation with typing effect on each line
+function bootSequence(index = 0) {
+  if (index < bootMessages.length) {
+    typeLine(bootMessages[index], 0, () => {
+      setTimeout(() => bootSequence(index + 1), 300);
+    });
+  } else {
+    enableInput();
+  }
+}
+
+bootSequence();
