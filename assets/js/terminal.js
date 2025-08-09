@@ -81,7 +81,7 @@ class HackerPortfolio {
                 const repos = await response.json();
                 this.projects = repos
                     .filter(repo => repo.name !== this.githubUsername + '.github.io')
-                    .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                     .map(repo => ({
                         name: repo.name,
                         description: repo.description || 'No description available',
