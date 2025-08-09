@@ -195,8 +195,11 @@ class HackerPortfolio {
                                 <div style="flex-shrink: 0;">
                                     <img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
                                          alt="Project thumbnail" 
-                                         style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #00aa33; border-radius: 4px;"
-                                         onerror="this.style.display='none'">
+                                         style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #00aa33; border-radius: 4px; cursor: pointer; transition: transform 0.2s;"
+                                         onerror="this.style.display='none'"
+                                         onclick="this.classList.toggle('zoomed')"
+                                         onmouseover="this.style.transform='scale(1.05)'"
+                                         onmouseout="if(!this.classList.contains('zoomed')) this.style.transform='scale(1)'">
                                 </div>
                             </div>
                         </div>
