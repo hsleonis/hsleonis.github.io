@@ -187,9 +187,19 @@ class HackerPortfolio {
                     <h3>PROJECT ANALYSIS: ${project.name}</h3>
                     
                     <div class="description-area">
-                            <strong>DESCRIPTION:</strong><br><br>
-                            ${project.description || 'No description available'}
-                    </div>
+                            <div style="display: flex; gap: 20px; align-items: flex-start;">
+                                <div style="flex: 1;">
+                                    <strong>DESCRIPTION:</strong><br><br>
+                                    ${project.description || 'No description available'}
+                                </div>
+                                <div style="flex-shrink: 0;">
+                                    <img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
+                                         alt="Project thumbnail" 
+                                         style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #00aa33; border-radius: 4px;"
+                                         onerror="this.style.display='none'">
+                                </div>
+                            </div>
+                        </div>
                                 
                     <div class="detail-item">
                         <span class="label">LANGUAGE:</span>
