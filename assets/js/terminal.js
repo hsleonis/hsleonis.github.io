@@ -71,29 +71,32 @@ class HackerPortfolio {
                 if (!this.githubUsername || this.githubUsername === 'your-github-username') {
                     throw new Error('Please set your GitHub username in the script');
                 }
-
+            
                 const response = await fetch(`https://api.github.com/users/${this.githubUsername}/repos?sort=updated&per_page=100`);
                 
                 if (!response.ok) {
                     throw new Error(`GitHub API error: ${response.status}`);
                 }
-
+            
                 const repos = await response.json();
-                this.projects = reposrepos.filter(repo => repo.name !== this.githubUsername + '.github.io').map(repo => ({
-                    name: repo.name,
-                    description: repo.description || 'No description available',
-                    language: repo.language || 'Unknown',
-                    stars: repo.stargazers_count,
-                    forks: repo.forks_count,
-                    updated: new Date(repo.updated_at),
-                    url: repo.html_url,
-                    clone_url: repo.clone_url,
-                    homepage: repo.homepage,
-                    topics: repo.topics || [],
-                    size: repo.size,
-                    created: new Date(repo.created_at),
-                    source: 'github'
-                }));
+                this.projects = repos
+                    .filter(repo => repo.name !== this.githubUsername + '.github.io')
+                    .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+                    .map(repo => ({
+                        name: repo.name,
+                        description: repo.description || 'No description available',
+                        language: repo.language || 'Unknown',
+                        stars: repo.stargazers_count,
+                        forks: repo.forks_count,
+                        updated: new Date(repo.updated_at),
+                        url: repo.html_url,
+                        clone_url: repo.clone_url,
+                        homepage: repo.homepage,
+                        topics: repo.topics || [],
+                        size: repo.size,
+                        created: new Date(repo.created_at),
+                        source: 'github'
+                    }));
             }
 
             async loadFromJSON() {
