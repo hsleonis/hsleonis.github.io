@@ -194,8 +194,7 @@ class HackerPortfolio {
                                 </div>
                                 <div style="flex-shrink: 0;">
                                     <img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
-                                         alt="Project thumbnail" 
-                                         style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #00aa33; border-radius: 4px; cursor: pointer; transition: transform 0.2s;"
+                                         alt="Project thumbnail"
                                          onerror="this.style.display='none'"
                                          onclick="this.classList.toggle('zoomed')"
                                          onmouseover="this.style.transform='scale(1.05)'"
