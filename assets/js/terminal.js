@@ -269,6 +269,6 @@ function showModal(Imgsrc) {
             modalImage.src = Imgsrc;
 }
 
-modalImage.onclick = function() {
+modal.onclick = function() {
             modal.style.display = 'none';
 }
