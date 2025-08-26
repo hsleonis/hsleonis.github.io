@@ -451,12 +451,12 @@ body::before {
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
-    transform: translate(-50%, -50%) scale(3) !important;
+    transform: translate(-50%, -50%) scale(2) !important;
     z-index: 2000 !important;
     width: auto !important;
     height: auto !important;
-    max-width: 80vw !important;
-    max-height: 80vh !important;
+    max-width: 50vw !important;
+    max-height: 50vh !important;
     box-shadow: 
         0 0 80px rgba(255, 0, 128, 0.8) !important,
         0 0 120px rgba(0, 255, 255, 0.6) !important;
