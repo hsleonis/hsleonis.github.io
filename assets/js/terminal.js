@@ -252,5 +252,17 @@ class HackerPortfolio {
             }
         }
 
-        // Initialize the portfolio
-        new HackerPortfolio();
+// Initialize the portfolio
+new HackerPortfolio();
+
+const modal = document.getElementById('modal');
+const modalImage = document.getElementById('modalImage');
+
+function showModal() {
+            modal.style.display = 'flex';
+            modalImage.src = this.src;
+}
+
+modalImage.onclick = function() {
+            modal.style.display = 'none';
+}
