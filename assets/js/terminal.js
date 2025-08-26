@@ -193,10 +193,16 @@ class HackerPortfolio {
                                     ${project.description || 'No description available'}
                                 </div>
                                 <div style="flex-shrink: 0;">
-                                    <img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
+                                    <!--<img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
                                          alt="Project thumbnail"
                                          onerror="this.style.display='none'"
                                          onclick="this.classList.toggle('zoomed')"
+                                         onmouseover="this.style.transform='scale(1.05)'"
+                                         onmouseout="if(!this.classList.contains('zoomed')) this.style.transform='scale(1)'">-->
+                                    <img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
+                                         alt="Project thumbnail"
+                                         onerror="this.style.display='none'"
+                                         onclick="showModal()"
                                          onmouseover="this.style.transform='scale(1.05)'"
                                          onmouseout="if(!this.classList.contains('zoomed')) this.style.transform='scale(1)'">
                                 </div>
