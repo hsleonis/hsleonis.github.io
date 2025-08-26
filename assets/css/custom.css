@@ -509,7 +509,7 @@ body::before {
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
 }
 
-/* Responsive Design */
+/* Responsive Design */ 
 @media (max-width: 768px) {
     .main-content {
         grid-template-columns: 1fr;
