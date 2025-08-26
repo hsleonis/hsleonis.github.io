@@ -432,12 +432,18 @@ body::before {
 .description-area img {
 	width: 120px;
 	height: 120px;
-	object-fit: cover;
-	border: 1px solid rgb(0, 170, 51);
-	border-radius: 4px;
 	cursor: zoom-in;
-	transition: transform 0.2s;
-	transform: scale(1.05);
+	object-fit: cover;
+    border: 1px solid var(--electric-blue);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 102, 255, 0.3);
+}
+
+.description-area img:hover:not(.zoomed) {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    border-color: var(--neon-cyan);
 }
 
 /* Zoom Effect */
@@ -445,17 +451,19 @@ body::before {
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
-    transform: translate(-50%, -50%) scale(2) !important;
+    transform: translate(-50%, -50%) scale(3) !important;
     z-index: 2000 !important;
     width: auto !important;
     height: auto !important;
-    max-width: 50vw !important;
-    max-height: 50vh !important;
+    max-width: 80vw !important;
+    max-height: 80vh !important;
     box-shadow: 
         0 0 80px rgba(255, 0, 128, 0.8) !important,
         0 0 120px rgba(0, 255, 255, 0.6) !important;
     border: 2px solid var(--neon-pink) !important;
-    cursor: zoom-out !important;
+    overflow: visible !important;
+    object-fit: contain !important;
+	cursor: zoom-out;
 }
 
 /* Status Messages */
