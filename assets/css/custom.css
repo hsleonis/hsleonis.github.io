@@ -58,7 +58,7 @@ body::before {
 /* Terminal Container */
 .terminal {
     position: relative;
-    min-height: 100vh;
+    height: calc(100vh - 20px);
     padding: 20px;
     background: 
         radial-gradient(ellipse at center, rgba(255, 0, 128, 0.05) 0%, transparent 70%),
@@ -71,6 +71,7 @@ body::before {
         0 0 60px rgba(0, 255, 255, 0.2);
     animation: cyber-pulse 2s ease-in-out infinite;
     backdrop-filter: blur(1px);
+    overflow: hidden;
 }
 
 @keyframes cyber-pulse {
@@ -102,12 +103,12 @@ body::before {
     font-family: 'Orbitron', monospace;
     font-size: 2.5em;
     font-weight: 900;
-    text-shadow: 
-        0 0 10px var(--neon-pink),
-        0 0 20px var(--neon-pink),
-        0 0 30px var(--accent-pink);
+    /*text-shadow: 
+        0 0 1px var(--neon-pink),
+        0 0 2px var(--neon-pink),
+        0 0 3px var(--accent-pink);
+    animation: neon-glow 1s ease-in-out infinite alternate;*/
     margin-bottom: 10px;
-    animation: neon-glow 2s ease-in-out infinite alternate;
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
     background-clip: text;
     -webkit-background-clip: text;
@@ -428,6 +429,17 @@ body::before {
     text-shadow: 0 0 10px var(--neon-cyan);
 }
 
+.description-area img {
+	width: 120px;
+	height: 120px;
+	object-fit: cover;
+	border: 1px solid rgb(0, 170, 51);
+	border-radius: 4px;
+	cursor: zoom-in;
+	transition: transform 0.2s;
+	transform: scale(1.05);
+}
+
 /* Zoom Effect */
 .zoomed {
     position: fixed !important;
@@ -443,6 +455,7 @@ body::before {
         0 0 80px rgba(255, 0, 128, 0.8) !important,
         0 0 120px rgba(0, 255, 255, 0.6) !important;
     border: 2px solid var(--neon-pink) !important;
+    cursor: zoom-out !important;
 }
 
 /* Status Messages */
