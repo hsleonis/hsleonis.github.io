@@ -202,7 +202,7 @@ class HackerPortfolio {
                                     <img src="https://raw.githubusercontent.com/${this.githubUsername}/${project.name}/main/thumbnail.jpg" 
                                          alt="Project thumbnail"
                                          onerror="this.style.display='none'"
-                                         onclick="showModal()"
+                                         onclick="showModal(this.src)"
                                          onmouseover="this.style.transform='scale(1.05)'"
                                          onmouseout="if(!this.classList.contains('zoomed')) this.style.transform='scale(1)'">
                                 </div>
@@ -264,9 +264,9 @@ new HackerPortfolio();
 const modal = document.getElementById('modal');
 const modalImage = document.getElementById('modalImage');
 
-function showModal() {
+function showModal(Imgsrc) {
             modal.style.display = 'flex';
-            modalImage.src = this.src;
+            modalImage.src = Imgsrc;
 }
 
 modalImage.onclick = function() {
